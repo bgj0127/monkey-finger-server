@@ -1,11 +1,10 @@
-from enum import Enum
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import cx_Oracle
 
-id_val = ""
-pw_val = ""
-dsn = ""
+id_val = "HR"
+pw_val = "12345"
+dsn = "localhost:1521/XE"
 
 conn = cx_Oracle.connect(id_val, pw_val, dsn)
 cur = conn.cursor()
@@ -21,45 +20,35 @@ app.add_middleware(
 )
 
 
-class TestModel(str, Enum):
-    test = "test"
-    abc = "abc"
-    hello = "hello"
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello World!"}
 
 
-@app.get("/wpm")
-def wpm():
-    select_all_wpm = "select wpm from monkey_type"
+@app.get("/default")
+def default():
+    select_all_wpm = "select wpm, acc, timestamp from monkey_type order by timestamp"
     cur.execute(select_all_wpm)
     wpm_list = cur.fetchall()
-    l = []
+    d = {"wpm": [], "acc": [], "time": []}
     for i in wpm_list:
-        l.append(i[0])
-    return l
+        d["wpm"].append(i[0])
+        d["acc"].append(i[1])
+        d["time"].append(i[2])
+    return d
 
+
+# @app.get("/")
+# def info():
+#     filtering = ""
+#     cur.execute(filtering)
+#     data = cur.fetchall()
+
+#     return ""
 
 # @app.get("/items/{item_id}")
 # async def read_item(item_id: int):
 #     return {"item_id": item_id}
-
-
-@app.get("/models/{model_name}")
-async def model(model_name: TestModel):
-    if model_name is TestModel.abc:
-        return {"model_name": model_name, "message": "test Model~"}
-
-
-# dummy_db = [{"item:name": "Foo"}, {"item:name": "Bar"}, {"item:name": "Baz"}]
-
-
-# @app.get("/items/")
-# async def read_items(skip: int = 0, limit: int = 10):
-#     return dummy_db[skip : skip + limit]
 
 
 # @app.get("/items/{item_id}")
