@@ -1,8 +1,8 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, APIRouter, Path
 from typing import List
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from DB_Control import connDB, initial_data
+from DB_Control import connDB, filtered_data
 
 engine, table = connDB("MONKEY_FINGER")
 
@@ -23,26 +23,24 @@ def root():
     return "hello"
 
 
-@app.get("/default")
-def default():
+class FilterType(BaseModel):
+    language: List[str] = []
+    mode: List[str] = []
+
+
+@app.post("/filter")
+def search_filter(filter_type: FilterType):
+    lanFilter = filter_type.language
+    modeFilter = filter_type.mode
+    print(lanFilter, modeFilter)
     with engine.connect() as conn:
         try:
-            return initial_data(table, conn)
-        except:
-            print("DB 데이터 로딩 실패")
+            return filtered_data(table, conn, lanFilter, modeFilter)
+        except HTTPException as e:
+            print(e)
+            return {"data": {"None"}, "status": e.status_code}
+    # return {"language": filter_type.language, "mode": filter_type.mode}
 
-
-class LanguageFilter():
-    language: List[str] = ['korean', 'english']
-
-
-class ModeFilter():
-    mode: List[str] = ['time', 'word', 'zen', 'custom']
-
-
-@app.get("/filter")
-def search_filter(language: LanguageFilter, mode: ModeFilter):
-    return {"language": language, "mode": mode}
 # @app.post("/uploadfile")
 # def upload_file(file: UploadFile):
 #     df = pd.read_csv(file.file)
