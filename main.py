@@ -8,7 +8,7 @@ engine, table = connDB("MONKEY_FINGER")
 
 app = FastAPI()
 
-origins = ["http://localhost:5173/", "https://monkeyfinger.netlify.app/"]
+origins = ["http://localhost:5173/", "https://monkeyfinger.netlify.app"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
