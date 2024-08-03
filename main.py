@@ -1,4 +1,6 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from typing import List
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from DB_Control import connDB, initial_data
 
@@ -6,7 +8,7 @@ engine, table = connDB("MONKEY_FINGER")
 
 app = FastAPI()
 
-origins = ["*"]
+origins = ["http://localhost:5173/", "https://monkeyfinger.netlify.app/"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -30,6 +32,17 @@ def default():
             print("DB 데이터 로딩 실패")
 
 
+class LanguageFilter():
+    language: List[str] = ['korean', 'english']
+
+
+class ModeFilter():
+    mode: List[str] = ['time', 'word', 'zen', 'custom']
+
+
+@app.get("/filter")
+def search_filter(language: LanguageFilter, mode: ModeFilter):
+    return {"language": language, "mode": mode}
 # @app.post("/uploadfile")
 # def upload_file(file: UploadFile):
 #     df = pd.read_csv(file.file)
