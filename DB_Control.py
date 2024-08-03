@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, select, insert, Table, MetaData
+from sqlalchemy import create_engine, select, desc, Table, MetaData
 from sqlalchemy.exc import IntegrityError, DatabaseError
 import os
 from dotenv import load_dotenv
@@ -28,7 +28,7 @@ def filtered_data(table, conn, lan: list, mode: list):
     result = []
     for i in lan_l:
         stmt = select(table.c.wpm, table.c.acc, table.c.timestamp,
-                      table.c.test_mode, table.c.test_mode2, table.c.language).where(table.c.language.like(i)).where(table.c.test_mode.in_(mode_l))
+                      table.c.test_mode, table.c.test_mode2, table.c.language).where(table.c.language.like(i)).where(table.c.test_mode.in_(mode_l)).order_by(desc(table.c.timestamp))
         try:
             result += conn.execute(stmt).all()
         except DatabaseError as e:
