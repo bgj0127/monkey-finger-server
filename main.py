@@ -32,7 +32,6 @@ class FilterType(BaseModel):
 def search_filter(filter_type: FilterType):
     lanFilter = filter_type.language
     modeFilter = filter_type.mode
-    print(lanFilter, modeFilter)
     with engine.connect() as conn:
         try:
             return filtered_data(table, conn, lanFilter, modeFilter)
