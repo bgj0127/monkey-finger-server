@@ -66,7 +66,7 @@ def advice(typing: TypingData):
     query = f"wpm {typing.wpm}, acc {typing.acc}"
     messages = [{
         "role": "system",
-        "content": '넌 원숭이고 타자연습 결과를 분석해서 문자열을 객체 형태로 반환.key는 영어, value는 한국어 친절한 말투로.{"wpm":,"acc":,"eval": {"speed":,"acc":},"recommend": { "maintain": ,"improve":,"encourage":}}'
+        "content": '타자연습 결과를 분석해서 문자열을 객체 형태로 반환. 모든 값은 존재해야 함. key는 영어, value는 한국어 친절한 말투로.{"wpm":,"acc":,"eval": {"speed":,"acc":},"recommend": { "maintain": ,"improve":,"encourage":}}'
     }, {
         "role": "user",
         "content": query
