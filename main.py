@@ -2,16 +2,19 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, APIRouter, Path
 from typing import List
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from DB_Control import connDB, filtered_data
+from DB_Control import connDB, filtered_data, view
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-engine, table = connDB("MONKEY_FINGER")
+engine, table, m = connDB("MONKEY_FINGER")
 app = FastAPI()
 
-origins = ["http://localhost:5173/", "https://monkeyfinger.netlify.app",
-           "https://master--monkeyfinger.netlify.app"]
+origins = [
+    "http://localhost:5173/",
+    "https://monkeyfinger.netlify.app",
+    "https://master--monkeyfinger.netlify.app",
+]
 
 
 # origins = ["*"]
@@ -53,33 +56,41 @@ class TypingData(BaseModel):
 
 
 client = OpenAI(
-    organization='org-MTh1QeshOBBE0hOZAi5z9Mfo',
-    project='proj_CH1M2LPgCzpMvmS2W4TJD4Fj',
+    organization="org-MTh1QeshOBBE0hOZAi5z9Mfo",
+    project="proj_CH1M2LPgCzpMvmS2W4TJD4Fj",
 )
 
+load_dotenv()
 client.api_key = os.getenv("OPENAI_API_KEY")
 
 
-@app.post("/advice")
-def advice(typing: TypingData):
+# 이것도 get으로 변경하자.
+@app.get("/advice")
+# 이거 그냥 DB 조회로 하자. body로 데이터 받지 말고.
+def advice():
+    engine, view_table, m = connDB("MONKEY_FINGER_VIEW")
+
+    with engine.connect() as conn:
+        d = view(view_table, conn)
     model = "gpt-3.5-turbo"
-    query = f"wpm {typing.wpm}, acc {typing.acc}"
-    messages = [{
-        "role": "system",
-        "content": '타자연습 결과를 분석해서 문자열을 객체 형태로 반환. 모든 값은 존재해야 함. key는 영어, value는 한국어 친절한 말투로.{"wpm":,"acc":,"eval": {"speed":,"acc":},"recommend": { "maintain": ,"improve":,"encourage":}}'
-    }, {
-        "role": "user",
-        "content": query
-    }]
+    query = f"{d}"
+    messages = [
+        {
+            "role": "system",
+            "content": 'Analyzing the results of typing practice records. Advice must required. must json object. keys are english, values are korean. { "average_speed": "", "average_accuracy": "", "average_duration": "", "speed_trend": "상승/감소/유지", "accuracy_trend": "상승/감소/유지", "stability":"", "advice": "kindly advice" }',
+        },
+        {"role": "user", "content": query},
+    ]
     response = client.chat.completions.create(
         model=model,
         messages=messages,
-        temperature=1.3,
+        temperature=1,
         max_tokens=512,
-        frequency_penalty=1.0
+        frequency_penalty=1.2,
     )
 
     return response.choices[0].message.content
+
     # @app.post("/uploadfile")
     # def upload_file(file: UploadFile):
     #     df = pd.read_csv(file.file)
