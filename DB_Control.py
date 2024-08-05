@@ -24,8 +24,7 @@ def filtered_data(table, conn, lan: list, mode: list):
         lan_l.append(f"'{s}%'")
     for s in mode:
         mode_l.append(f"'{s}'")
-    d = {"wpm": [], "acc": [], "time": [],
-         "mode": [], "mode2": [], "language": [], "duration": []}
+    d = {"wpm": [], "acc": [], "time": [],"mode": [], "mode2": [], "language": [], "duration": []}
     result = []
     stmt = select(table.c.wpm, table.c.acc, table.c.timestamp,
                     table.c.test_mode, table.c.test_mode2, table.c.language, table.c.test_duration).where(
@@ -55,6 +54,6 @@ def filtered_data(table, conn, lan: list, mode: list):
     return d
 
 def view(table, conn):
-    stmt = select(table.c.wpm, table.c.acc, table.c.test_duration)
+    stmt = select(table.c.wpm, table.c.acc, table.c.test_duration, table.c.test_mode)
     result = str(conn.execute(stmt).all()).strip()
     return result
