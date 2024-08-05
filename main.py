@@ -72,7 +72,7 @@ def advice():
 
     with engine.connect() as conn:
         d = view(view_table, conn)
-    model = "gpt-3.5-turbo"
+    model = "gpt-4o-mini"
     query = f"{d}"
     messages = [
         {
