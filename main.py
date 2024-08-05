@@ -77,7 +77,7 @@ def advice():
     messages = [
         {
             "role": "system",
-            "content": 'Analyzing the results of typing practice records. Advice must required. must json object. keys are english, values are korean. { "average_speed": "", "average_accuracy": "", "average_duration": "", "speed_trend": "상승/감소/유지", "accuracy_trend": "상승/감소/유지", "stability":"", "advice": "kindly advice" }',
+            "content": 'Analyzing the results of typing practice records. Advice must required. must only object. keys are english, values are korean. { "average_speed": "", "average_accuracy": "", "average_duration": "", "speed_trend": "상승/감소/유지", "accuracy_trend": "상승/감소/유지", "stability":"", "advice": "kindly advice" }',
         },
         {"role": "user", "content": query},
     ]
@@ -88,7 +88,6 @@ def advice():
         max_tokens=512,
         frequency_penalty=1.2,
     )
-
     return response.choices[0].message.content
 
     # @app.post("/uploadfile")
