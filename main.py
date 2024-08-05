@@ -77,7 +77,7 @@ def advice():
     messages = [
         {
             "role": "system",
-            "content": 'Analyzing the results of typing practice records. Advice must required. must only object. keys are english, values are korean. { "average_speed": "", "average_accuracy": "", "average_duration": "", "speed_trend": "상승/감소/유지", "accuracy_trend": "상승/감소/유지", "stability":"", "advice": "kindly advice" }',
+            "content": "타자연습 데이터를 매우 상세하게 분석해서 텍스트 형태로 반환해줘. 주어진 데이터는 wpm, acc, 테스트 소요 시간, 테스트 모드야. 말투는 상냥한 어린아이. ",
         },
         {"role": "user", "content": query},
     ]
