@@ -4,6 +4,15 @@ from typing import List
 from fastapi import HTTPException
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    userId: str | None = None
+
+
 class Sign(BaseModel):
     user_id: str
     user_pw: str
@@ -35,7 +44,6 @@ class Sign(BaseModel):
 
 
 class FilterType(BaseModel):
-    user_id: str
     language: List[str] = []
     mode: List[str] = []
 

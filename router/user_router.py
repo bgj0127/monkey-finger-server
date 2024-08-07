@@ -2,9 +2,15 @@ from sqlalchemy.orm import Session
 from database import get_db
 from schema import Sign
 from crud import user_crud
+import os
+from dotenv import load_dotenv
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
 
+
+ACCESS_TOKEN_EXPIRE_MINUTES = float(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+load_dotenv()
 app = APIRouter(prefix="/user")
 
 
@@ -22,25 +28,11 @@ def register_new_user(user: Sign, db: Session = Depends(get_db)):
     return HTTPException(status_code=status.HTTP_200_OK, detail="Register successful")
 
 
-@app.post("/login", description="유저 - 로그인")
-def login(login_form: Sign, db: Session = Depends(get_db)):
-    user = user_crud.get_user(login_form.user_id, db)
+@app.get("/logout", description="유저 - 로그아웃")
+def logout(response: Response, request: Request):
+    access_token = request.cookies.get("access_token")
+    print(access_token)
+    # 쿠키 삭제
+    response.delete_cookie(key="access_token")
 
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user or password"
-        )
-
-    res = user_crud.verify_password(login_form.user_pw, user.user_pw)
-
-    if not res:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user or password"
-        )
-
-    return {
-        "userId": user.user_id,
-        "result": HTTPException(
-            status_code=status.HTTP_200_OK, detail="Login successful"
-        ),
-    }
+    return HTTPException(status_code=status.HTTP_200_OK, detail="Logout successful")

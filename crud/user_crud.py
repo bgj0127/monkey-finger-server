@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-
 from models import User
 from schema import Sign
 
@@ -20,7 +19,8 @@ def insert_user(new_user: Sign, db: Session):
 
 
 def get_user(user_id: str, db: Session):
-    return db.query(User).filter(User.user_id == user_id).first()
+    user = db.query(User).filter(User.user_id == user_id).first()
+    return user
 
 
 def verify_password(plain_password, hashed_password):
