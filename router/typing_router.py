@@ -11,7 +11,6 @@ app = APIRouter(prefix="/typing")
 
 @app.post("/filter", description="타자 기록 - 데이터 조회")
 def read_filtered_data(filter: FilterType, db: Session = Depends(get_db)):
-    print(filter.user_id, filter.language, filter.mode)
     return typing_crud.list_filtered_data(
         filter.user_id, filter.language, filter.mode, db
     )

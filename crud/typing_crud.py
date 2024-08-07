@@ -9,14 +9,12 @@ def insert_typing_data(user_id: str, typing_df: pd.DataFrame, db: Session):
 
     # 데이터 insert문 작성하기
     for i in range(typing_df.shape[0]):
-        # print(typing_df.iloc[i])
         new_data = (
             db.query(Typing)
             .filter(Typing.typing_id == typing_df.iloc[i]["_id"])
             .first()
         )
         if new_data:
-            print("중복 데이터")
             continue
         data = Typing(
             typing_id=typing_df.iloc[i]["_id"],
