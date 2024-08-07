@@ -9,11 +9,6 @@ from fastapi import APIRouter, Depends, UploadFile, HTTPException, status
 app = APIRouter(prefix="/typing")
 
 
-@app.get("/test")
-def typing_test():
-    return "test"
-
-
 @app.post("/filter", description="타자 기록 - 데이터 조회")
 def read_filtered_data(filter: FilterType, db: Session = Depends(get_db)):
     print(filter.user_id, filter.language, filter.mode)

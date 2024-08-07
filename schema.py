@@ -1,7 +1,7 @@
 from pydantic import BaseModel, field_validator
 from typing import List
 
-from fastapi import HTTPException, UploadFile
+from fastapi import HTTPException
 
 
 class Sign(BaseModel):
@@ -32,16 +32,6 @@ class Sign(BaseModel):
                 status_code=422, detail="8자리 이상의 영문과 숫자를 포함해주세요."
             )
         return v
-
-
-class TypingDataFrame(BaseModel):
-    _id: str
-    wpm: float
-    acc: float
-    mode: str
-    testDuration: float
-    language: str
-    timestamp: int
 
 
 class FilterType(BaseModel):

@@ -1,11 +1,8 @@
 from sqlalchemy import asc, or_
 from sqlalchemy.orm import Session
-from pydantic import TypeAdapter
-from typing import List
 import pandas as pd
 
 from models import Typing
-from schema import TypingDataFrame
 
 
 def insert_typing_data(user_id: str, typing_df: pd.DataFrame, db: Session):
@@ -18,9 +15,9 @@ def insert_typing_data(user_id: str, typing_df: pd.DataFrame, db: Session):
             .filter(Typing.typing_id == typing_df.iloc[i]["_id"])
             .first()
         )
-
         if new_data:
             print("중복 데이터")
+            continue
         data = Typing(
             typing_id=typing_df.iloc[i]["_id"],
             wpm=float(typing_df.iloc[i]["wpm"]),

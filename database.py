@@ -4,6 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 engine = create_engine(
             f"postgresql://{os.getenv("USER")}:{os.getenv("PASSWORD")}@{os.getenv("HOST")}:{os.getenv("PORT")}/{os.getenv("DB")}")
 SessionLocal = sessionmaker(autoflush=False,bind=engine)
