@@ -41,10 +41,12 @@ def list_filtered_data(user_id, language, mode, db: Session):
         "duration": [],
     }
 
+    lan = [i + "%" for i in language]
+
     lists = (
         db.query(Typing)
         .where(Typing.user_id == user_id)
-        .where(or_(*[Typing.language.like(pattern) for pattern in language]))
+        .where(or_(*[Typing.language.like(pattern) for pattern in lan]))
         .where(Typing.test_mode.in_(mode))
         .order_by(asc(Typing.timestamp))
         .all()
