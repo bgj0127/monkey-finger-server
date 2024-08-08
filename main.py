@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 import models
 from database import get_db, engine
-from schema import Token, FilterType, Sign
+from schema import Token, FilterType, UserForm
 
 import os
 from dotenv import load_dotenv
@@ -84,7 +84,7 @@ client.api_key = os.getenv("OPENAI_API_KEY")
 
 @app.post("/advice")
 def advice(
-    user: Annotated[Sign, Depends(verify_access_token)],
+    user: Annotated[UserForm, Depends(verify_access_token)],
     filter: FilterType,
     db: Session = Depends(get_db),
 ):
