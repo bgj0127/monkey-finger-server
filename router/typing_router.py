@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from crud import typing_crud
 import pandas as pd
-from schema import FilterType, Sign
+from schema import FilterType, UserForm
 from fastapi import APIRouter, Depends, UploadFile, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from security import verify_access_token
@@ -18,7 +18,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
     description="타자 기록 - 데이터 조회",
 )
 def read_filtered_data(
-    user: Annotated[Sign, Depends(verify_access_token)],
+    user: Annotated[UserForm, Depends(verify_access_token)],
     filter: FilterType,
     db: Session = Depends(get_db),
 ):
@@ -29,7 +29,7 @@ def read_filtered_data(
 
 @app.post("/upload", description="타자 기록 - 데이터 삽입")
 def write_typing_data(
-    user: Annotated[Sign, Depends(verify_access_token)],
+    user: Annotated[UserForm, Depends(verify_access_token)],
     typing_data: UploadFile,
     db: Session = Depends(get_db),
 ):

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from database import get_db
-from schema import Sign
+from schema import UserForm
 from crud import user_crud
 import os
 from dotenv import load_dotenv
@@ -15,7 +15,7 @@ app = APIRouter(prefix="/user")
 
 
 @app.post("/register", description="유저 - 회원가입")
-def register_new_user(user: Sign, db: Session = Depends(get_db)):
+def register_new_user(user: UserForm, db: Session = Depends(get_db)):
     new_user = user_crud.get_user(user.user_id, db)
 
     if new_user:

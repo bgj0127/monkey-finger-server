@@ -13,7 +13,7 @@ class TokenData(BaseModel):
     userId: str | None = None
 
 
-class Sign(BaseModel):
+class UserForm(BaseModel):
     user_id: str
     user_pw: str
 
