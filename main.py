@@ -7,26 +7,23 @@ from sqlalchemy.orm import Session
 
 import models
 from database import get_db, engine
-from schema import Token, FilterType, UserForm
+from schema import FilterType, UserForm
 
 import os
 from dotenv import load_dotenv
 
 from typing_extensions import Annotated
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordRequestForm
-from datetime import timedelta
-from security import create_access_token, auth_user, verify_access_token
+from security import verify_access_token
+
 
 models.Base.metadata.create_all(bind=engine)
 
 load_dotenv()
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = float(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
-
+REFRESH_TOKEN_EXPIRE_WEEKS = float(os.getenv("REFRESH_TOKEN_EXPIRE_WEEKS"))
 app = FastAPI()
 
 app.include_router(typing_router.app, tags=["typing"])
@@ -51,26 +48,6 @@ app.add_middleware(
 @app.get("/")
 def root():
     return "hello"
-
-
-@app.post("/token", description="유저 - 로그인", response_model=Token)
-def login(
-    login_form: Annotated[OAuth2PasswordRequestForm, Depends()],
-    db: Session = Depends(get_db),
-):
-    user = auth_user(login_form.username, login_form.password, db)
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user or password"
-        )
-
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.user_id}, expires_delta=access_token_expires
-    )
-
-    return Token(access_token=access_token, token_type="Bearer")
 
 
 client = OpenAI(

@@ -4,13 +4,10 @@ from crud import typing_crud
 import pandas as pd
 from schema import FilterType, UserForm
 from fastapi import APIRouter, Depends, UploadFile, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from security import verify_access_token
 from typing_extensions import Annotated
 
 app = APIRouter(prefix="/typing")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 @app.post(

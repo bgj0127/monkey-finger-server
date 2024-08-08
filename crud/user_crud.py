@@ -21,7 +21,3 @@ def insert_user(new_user: UserForm, db: Session):
 def get_user(user_id: str, db: Session):
     user = db.query(User).filter(User.user_id == user_id).first()
     return user
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)

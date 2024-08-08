@@ -6,11 +6,11 @@ from fastapi import HTTPException
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    refresh_token: str
 
 
 class TokenData(BaseModel):
-    userId: str | None = None
+    user_id: str | None = None
 
 
 class UserForm(BaseModel):
