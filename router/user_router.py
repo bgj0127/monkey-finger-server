@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 from datetime import timedelta
 
 
-from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from security import auth_user, create_access_token, create_refresh_token
 
@@ -36,7 +37,6 @@ def register_new_user(user: UserForm, db: Session = Depends(get_db)):
 
 @app.post("/login", description="유저 - 로그인", response_model=Token)
 def login(
-    response: Response,
     login_form: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
 ):
@@ -56,27 +56,27 @@ def login(
         data={"sub": user.user_id}, expires_delta=refresh_token_expires
     )
 
+    response = JSONResponse(content={"message": "cookieeeeeeeee"})
+
     response.set_cookie(
-        key="access_token",
-        value=access_token,
-        path="/",
+        key="access_token", value=access_token, domain="monkeyfinger.netlify.app"
     )
 
     response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        path="/",
+        key="refresh_token", value=refresh_token, domain="monkeyfinger.netlify.app"
     )
 
     return Token(access_token=access_token, refresh_token=refresh_token)
 
 
 @app.get("/logout", description="유저 - 로그아웃")
-def logout(response: Response, request: Request):
+def logout(request: Request):
     access_token = request.cookies.get("access_token")
     print(access_token)
     # 쿠키 삭제
-    response.delete_cookie(key="access_token", path="/")
-    response.delete_cookie(key="refresh_token", path="/")
+    response = JSONResponse(content={"message": "cookieeeeeeeee"})
+
+    response.delete_cookie(key="access_token")
+    response.delete_cookie(key="refresh_token")
 
     return HTTPException(status_code=status.HTTP_200_OK, detail="Logout successful")
