@@ -70,7 +70,7 @@ def advice(
         user.user_id, filter.language, filter.mode, db
     )
 
-    model = "gpt-4o-mini"
+    model = "gpt-3.5-turbo"
     query = f"{result}"
     messages = [
         {
