@@ -59,11 +59,19 @@ def login(
     response = JSONResponse(content={"message": "cookieeeeeeeee"})
 
     response.set_cookie(
-        key="access_token", value=access_token, domain="monkeyfinger.netlify.app"
+        key="access_token",
+        value=access_token,
+        domain=".monkeyfinger.netlify.app",
+        samesite="none",
+        secure=True,
     )
 
     response.set_cookie(
-        key="refresh_token", value=refresh_token, domain="monkeyfinger.netlify.app"
+        key="refresh_token",
+        value=refresh_token,
+        domain=".monkeyfinger.netlify.app",
+        samesite="none",
+        secure=True,
     )
 
     return Token(access_token=access_token, refresh_token=refresh_token)
