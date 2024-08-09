@@ -65,8 +65,8 @@ async def verify_access_token(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    print(request.cookies.get("access_token"))
-    print(request.cookies.get("refresh_token"))
+    print("access", request.cookies.get("access_token"))
+    print("refresh", request.cookies.get("refresh_token"))
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
