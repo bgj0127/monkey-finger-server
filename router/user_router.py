@@ -61,7 +61,6 @@ def login(
     response.set_cookie(
         key="access_token",
         value=access_token,
-        domain=".netlify.app",
         samesite="none",
         secure=True,
     )
@@ -69,7 +68,6 @@ def login(
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
-        domain=".netlify.app",
         samesite="none",
         secure=True,
     )
