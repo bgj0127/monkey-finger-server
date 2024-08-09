@@ -87,9 +87,7 @@ async def verify_access_token(
     return user
 
 
-def verify_refresh_token(
-    respone: Response, token: Annotated[str, Depends(oauth2_scheme)]
-):
+def verify_refresh_token(token: Annotated[str, Depends(oauth2_scheme)]):
     credential_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Unauthorized",
@@ -108,7 +106,6 @@ def verify_refresh_token(
     except JWTError:
         credential_exception
     else:
-        respone.delete_cookie("refresh_token")
         print("Refresh 토큰 만료")
 
     return access_token
