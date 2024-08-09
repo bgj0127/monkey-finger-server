@@ -31,6 +31,7 @@ app.include_router(user_router.app, tags=["user"])
 
 origins = [
     "https://monkeyfinger.netlify.app",
+    ".app",
     "https://master--monkeyfinger.netlify.app",
 ]
 # origins = ["*"]
@@ -40,7 +41,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 

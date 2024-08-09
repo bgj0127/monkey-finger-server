@@ -63,6 +63,8 @@ def login(
         value=access_token,
         samesite="none",
         secure=True,
+        httponly=True,
+        domain=".app",
     )
 
     response.set_cookie(
@@ -70,6 +72,8 @@ def login(
         value=refresh_token,
         samesite="none",
         secure=True,
+        httponly=True,
+        domain=".app",
     )
 
     return Token(access_token=access_token, refresh_token=refresh_token)
