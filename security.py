@@ -65,6 +65,9 @@ async def verify_access_token(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+    print(request.cookies.get("access_token"))
+    print(request.cookies.get("refresh_token"))
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except ExpiredSignatureError:
@@ -93,6 +96,7 @@ def verify_refresh_token(token: Annotated[str, Depends(oauth2_scheme)]):
         detail="Unauthorized",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("sub")
